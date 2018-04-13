@@ -122,6 +122,14 @@ def execute_monitor_loop(options):
         time.sleep(frequency)
 
 
+def solid(colour):
+    send_colour(colour)
+
+
+def send_colour(colour):
+    print('Sending colour ' + colour)
+
+
 def change_state(state, options):
     print("Changing state to " + state)
     # Possible value are :
@@ -131,6 +139,27 @@ def change_state(state, options):
     # "Testing", "TestFailed",
     # "Success"
     # "PollFailed
+
+    if state == 'Waiting':
+        solid('LightBlue')
+    elif state == 'Acquiring':
+        solid('PaleBlue')
+    elif state == 'Deploying':
+        solid('Blue')
+    elif state == 'Testing':
+        solid('Pink')
+    elif state == 'WaitFailed':
+        solid('Yellow')
+    elif state == 'AcquireFailed':
+        solid('Orange')
+    elif state == 'DeployFailed':
+        solid('DarkOrange')
+    elif state == 'TestFailed':
+        solid('Red')
+    elif state == 'PollFailed':
+        solid('DarkPurple')
+    else:
+        solid('Green')
 
 if __name__ == '__main__':
     main()
