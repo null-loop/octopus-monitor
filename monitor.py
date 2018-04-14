@@ -1,7 +1,7 @@
 from sys import argv
 import time
 import requests
-
+import lirc
 
 DETAILED_DEPLOYING = True
 
@@ -23,6 +23,7 @@ def test_colours():
         solid('Red')
         time.sleep(1)
         solid('Blue')
+        time.sleep(1)
 
 
 def display_options(options):
