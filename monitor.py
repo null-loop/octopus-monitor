@@ -18,13 +18,11 @@ def main():
 
 
 def test_colours():
+    colours = [LampCommand.LIGHT_BLUE, LampCommand.SKY_BLUE, LampCommand.BLUE, LampCommand.DARK_BLUE, LampCommand.YELLOW, LampCommand.DARK_YELLOW, LampCommand.ORANGE, LampCommand.RED, LampCommand.PURPLE, LampCommand.GREEN]
     while True:
-        ir_send(LampCommand.GREEN)
-        time.sleep(1)
-        ir_send(LampCommand.RED)
-        time.sleep(1)
-        ir_send(LampCommand.BLUE)
-        time.sleep(1)
+        for colour in colours:
+            ir_send(colour)
+            time.sleep(1)
 
 
 def display_options(options):
@@ -185,19 +183,15 @@ class LampCommand(Enum):
     ORANGE = 9
     PEA_GREEN = 10
     DARK_BLUE = 11
-    JUMP_7 = 12
     DARK_YELLOW = 13
     CYAN = 14
     BROWN = 15
-    FADE_ALL = 16
     YELLOW = 17
     LIGHT_BLUE = 18
     PINK = 19
-    FADE_7 = 20
     STRAW_YELLOW = 21
     SKY_BLUE = 22
     PURPLE = 23
-    JUMP_3 = 24
 
 
 if __name__ == '__main__':
