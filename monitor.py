@@ -137,8 +137,8 @@ def execute_monitor_loop(options):
 
 
 def ir_send(colour):
-    print('Sending command ' + colour)
-    os.system('irsend SEND_ONCE LED_24_KEY ' + colour)
+    print('Sending command ' + colour.name)
+    os.system('irsend SEND_ONCE LED_24_KEY ' + colour.name)
 
 
 def change_state(state, options):
