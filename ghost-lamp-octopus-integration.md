@@ -133,3 +133,5 @@ $ python /home/pi/octopus-monitor/monitor.py -colour-test on
 ```
 
 If everything's OK you should see something like
+
+![Colour cycle test](images/colour-cycle.gif)
