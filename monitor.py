@@ -1,7 +1,8 @@
 from sys import argv
+from enum import Enum
 import time
 import requests
-import lirc
+import os
 
 DETAILED_DEPLOYING = True
 
@@ -18,11 +19,11 @@ def main():
 
 def test_colours():
     while True:
-        solid('Green')
+        ir_send(LampCommand.GREEN)
         time.sleep(1)
-        solid('Red')
+        ir_send(LampCommand.RED)
         time.sleep(1)
-        solid('Blue')
+        ir_send(LampCommand.BLUE)
         time.sleep(1)
 
 
@@ -135,12 +136,9 @@ def execute_monitor_loop(options):
         time.sleep(frequency)
 
 
-def solid(colour):
-    send_colour(colour)
-
-
-def send_colour(colour):
-    print('Sending colour ' + colour)
+def ir_send(colour):
+    print('Sending command ' + colour)
+    os.system('irsend SEND_ONCE LED_24_KEY ' + colour)
 
 
 def change_state(state, options):
@@ -154,25 +152,53 @@ def change_state(state, options):
     # "PollFailed
 
     if state == 'Waiting':
-        solid('LightBlue')
+        ir_send(LampCommand.LIGHT_BLUE)
     elif state == 'Acquiring':
-        solid('PaleBlue')
+        ir_send(LampCommand.SKY_BLUE)
     elif state == 'Deploying':
-        solid('Blue')
+        ir_send(LampCommand.BLUE)
     elif state == 'Testing':
-        solid('Pink')
+        ir_send(LampCommand.DARK_BLUE)
     elif state == 'WaitFailed':
-        solid('Yellow')
+        ir_send(LampCommand.YELLOW)
     elif state == 'AcquireFailed':
-        solid('Orange')
+        ir_send(LampCommand.DARK_YELLOW)
     elif state == 'DeployFailed':
-        solid('DarkOrange')
+        ir_send(LampCommand.ORANGE)
     elif state == 'TestFailed':
-        solid('Red')
+        ir_send(LampCommand.RED)
     elif state == 'PollFailed':
-        solid('DarkPurple')
+        ir_send(LampCommand.PURPLE)
     else:
-        solid('Green')
+        ir_send(LampCommand.GREEN)
+
+
+class LampCommand(Enum):
+    BRIGHT_DOWN = 1
+    BRIGHT_UP = 2
+    OFF = 3
+    ON = 4
+    RED = 5
+    GREEN = 6
+    BLUE = 7
+    WHITE = 8
+    ORANGE = 9
+    PEA_GREEN = 10
+    DARK_BLUE = 11
+    JUMP_7 = 12
+    DARK_YELLOW = 13
+    CYAN = 14
+    BROWN = 15
+    FADE_ALL = 16
+    YELLOW = 17
+    LIGHT_BLUE = 18
+    PINK = 19
+    FADE_7 = 20
+    STRAW_YELLOW = 21
+    SKY_BLUE = 22
+    PURPLE = 23
+    JUMP_3 = 24
+
 
 if __name__ == '__main__':
     main()
