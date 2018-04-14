@@ -8,10 +8,21 @@ DETAILED_DEPLOYING = True
 
 def main():
     options = get_options(argv)
-    if not valid_options(options):
+    if '-colour-test' in options:
+        test_colours()
+    elif not valid_options(options):
         display_options_help()
     else:
         execute_monitor_loop(options)
+
+
+def test_colours():
+    while True:
+        solid('Green')
+        time.sleep(1)
+        solid('Red')
+        time.sleep(1)
+        solid('Blue')
 
 
 def display_options(options):
