@@ -135,3 +135,20 @@ $ python /home/pi/octopus-monitor/monitor.py -colour-test on
 If everything's OK you should see something like
 
 ![Colour cycle test](images/colour-cycle.gif)
+
+### Octopus Integration
+
+Now you've got the IR to Lamp bits working you can run the script with the appropriate arguments to poll
+
+```
+monitor.py -key [Octopus API Key] -url [Base Octopus URL] 
+-project [ID of target to monitor] 
+-environment [ID of environment to monitor]
+-frequency [polling interval in seconds]
+```
+
+The project ID will be something like 'Projects-xxxx' and the environment ID like 'Environments-xxxx' you can discover the IDs from the Octopus API. Make sure to include a trailing slash on the Base Octopus URL.
+
+We built the script specific to our deployment / test process. So you might want to tweak it - look at the `get_deploying_state` method - you can determine what steps have passed / failed / are running in there.
+
+If you just want a passed / failed status - change the global variable `DETAILED_DEPLOYING` to false.
