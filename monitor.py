@@ -10,7 +10,8 @@ def main():
     options = get_options(argv)
     if not valid_options(options):
         display_options_help()
-    execute_monitor_loop(options)
+    else:
+        execute_monitor_loop(options)
 
 
 def display_options(options):
