@@ -150,7 +150,7 @@ def change_state(state, options):
     # "PollFailed
 
     if state == 'Waiting':
-        ir_send(LampCommand.LIGHT_BLUE)
+        ir_send(LampCommand.WHITE)
     elif state == 'Acquiring':
         ir_send(LampCommand.SKY_BLUE)
     elif state == 'Deploying':
