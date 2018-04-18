@@ -66,6 +66,8 @@ def get_options(arguments):
 def get_deploying_state(state, task_details):
     if state == 'Success':
         return 'Success'
+    if state == 'Queued':
+        return 'Queued'
     if DETAILED_DEPLOYING:
         # examine the ActivityLogs to determine detailed deployment status...
         deploy_logs = task_details.get('ActivityLogs')[0]
@@ -167,6 +169,8 @@ def change_state(state, options):
         ir_send(LampCommand.RED)
     elif state == 'PollFailed':
         ir_send(LampCommand.PURPLE)
+    elif state == 'Queued':
+        ir_send(LampCommand.WHITE)
     else:
         ir_send(LampCommand.GREEN)
 
