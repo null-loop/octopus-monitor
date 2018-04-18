@@ -4,27 +4,27 @@
 
 One of our current projects includes a set of full system integration tests that are automatically executed when a new integration deployment takes place (which is also automated from new development builds). We wanted a simple way to get the status of these tests in front of all of the team and the rest of the business.
 
-What we needed was a lamp that could change colour... maybe one of these
+What we needed was a lamp that could change colour... maybe one of these.
 
 ![Pacman Ghost Lamp - our team's called Thundergods - it makes sense to us...](images/purple_ghost_lamp.jpg)
 
 _Our team is called ThunderGods so a ghost makes sense... Honest._
 
-It's IR controlled and has a number of different colours. Now all we need to something to monitor the status of our Octopus deployment / test execution and update the colour of the lamp dependent on the state.
+It's IR controlled and has a number of different colours. Now all we need is something to monitor the status of our Octopus deployment / test execution and update the colour of the lamp dependent on the state.
 
-Fortunately Octopus exposes an extensive API so being able to discover the state of the deployment wouldn't be difficult. All we need is something to send IR signals. The perfect platform for these kind of integration efforts is the Raspberry PI and it's extensive set of hardware addons includes an IR transmitter / receiver shield.
+Fortunately Octopus exposes an extensive API so being able to discover the state of the deployment wouldn't be difficult. All we need is something to send IR signals. The perfect platform for these kind of integration efforts is the Raspberry Pi and it's extensive set of hardware addons, which happens to include an IR transmitter / receiver shield.
 
 ![Raspberry PI with IR shield](images/raspberry_pi_with_ir_shield.jpg)
 
 To be able to communicate with the lamp we need to know what the IR commands are that it uses. Fortunately it's a standard set that someone has [already mapped out for us](https://github.com/null-loop/octopus-monitor/blob/master/lircd.conf). 
 
-This configuration is intended for us in LIRC (Linux Infrared Remote Control) which is compatible with Raspbian on the PI. Setting up LIRC can be _tricky_ but once done you can easily send commands to change the colour of the lamp or turn it on and off.
+This configuration is intended for use in LIRC (Linux Infrared Remote Control) which is compatible with Raspbian on the Pi. Setting up LIRC can be _tricky_ but once done you can easily send commands to change the colour of the lamp or turn it on and off.
 
-Then it was a case of tying all of this together in a python script.
+Then it was a case of tying all of this together in a Python script.
 
 ### Shopping List
 
-* One Raspberry PI
+* One Raspberry Pi
 * One IR controlled LED lamp - we're using this [Pacman Ghost Lamp](https://www.amazon.co.uk/Pac-Man-Plastic-Ghost-Lamp-White/dp/B00IFC2YCC) - but anything that uses the same 24 key remote will work
 * One IR Remote Shield - we're using this [shield](https://www.amazon.co.uk/gp/product/B07912JHDK/ref=oh_aui_detailpage_o01_s00?ie=UTF8&psc=1)
 
@@ -32,13 +32,13 @@ Then it was a case of tying all of this together in a python script.
 
 Clone the git repository at [https://github.com/null-loop/octopus-monitor.git](https://github.com/null-loop/octopus-monitor.git) to `/home/pi/octopus-monitor`
 
-Make sure you've got the `requests` Python package installed
+Make sure you've got the `requests` Python package installed:
 
 ```
 $ pipenv install requests
 ```
 
-Now install LIRC
+Now install LIRC:
 
 ```
 $ sudo apt-get update
@@ -62,39 +62,39 @@ DEVICE="/dev/lirc0"
 MODULES="lirc_rpi"
 ```
 
-Update / add the following line in `/boot/config.txt`
+Update / add the following line in `/boot/config.txt`:
 
 ```
 dtoverlay=lirc-rpi,gpio_in_pin=18,gpio_out_pin=17
 ```
 
-Update the following lines in `etc/lirc/lirc_options.conf`
+Update the following lines in `etc/lirc/lirc_options.conf`:
 
 ```
 driver      = default
 device      = /dev/lirc0
 ```
 
-Stop and start lircd:
+Stop and start LIRCD:
 
 ```
 $ sudo /etc/init.d/lircd stop
 $ sudo /etc/init.d/lircd start
 ```
 
-You can check the status of lirc to ensure it's running
+You can check the status of LIRC to ensure it's running:
 
 ```
 $ sudo /etc/init.d/lircd status
 ```
 
-If everything's OK we need to reboot before we do further testing
+If everything's OK we need to reboot before we do further testing:
 
 ```
 $ sudo reboot
 ```
 
-Once rebooted we can test that the lirc driver is working correctly
+Once rebooted we can test that the LIRC driver is working correctly:
 
 ```
 $ sudo /etc/init.d/lircd stop
@@ -110,7 +110,7 @@ pulse 535
 etc...
 ```
 
-Now we need to instruct lirc how to send the commands used by the lamp. Backup the existing config and copy over the one from the git repository.
+Now we need to instruct LIRC how to send the commands used by the lamp. Backup the existing config and copy over the one from the git repository:
 
 ```
 $ sudo /etc/init.d/lircd stop
@@ -119,26 +119,26 @@ $ sudo cp /home/pi/octopus-monitor/lircd.conf /etc/lirc/lircd.conf
 $ sudo /etc/init.d/lircd start
 ```
 
-Once that is done we can send specific commands to the lamp
+Once that is done we can send specific commands to the lamp:
 
 ```
 $ irsend SEND_ONCE LED_24_KEY RED
 $ irsend SEND_ONCE LED_24_KEY GREEN
 ```
 
-If all of this has worked you can now run the colour test from the python script
+If all of this has worked you can now run the colour test from the Python script:
 
 ``` 
 $ python /home/pi/octopus-monitor/monitor.py -colour-test on
 ```
 
-If everything's OK you should see something like
+If everything's OK you should see something like:
 
 ![Colour cycle test](images/colour-cycle.gif)
 
 ### Octopus Integration
 
-Now you've got the IR to Lamp bits working you can run the script with the appropriate arguments to poll
+Now you've got the IR to Lamp bits working you can run the script with the appropriate arguments to poll:
 
 ```
 monitor.py -key [Octopus API Key] -url [Base Octopus URL] 
@@ -147,7 +147,7 @@ monitor.py -key [Octopus API Key] -url [Base Octopus URL]
 -frequency [polling interval in seconds]
 ```
 
-The project ID will be something like 'Projects-xxxx' and the environment ID like 'Environments-xxxx' you can discover the IDs from the Octopus API. Make sure to include a trailing slash on the Base Octopus URL.
+The project ID will be something like 'Projects-xxxx' and the environment ID will be along the lines of 'Environments-xxxx', you can discover the IDs from the Octopus API. Make sure to include a trailing slash on the Base Octopus URL.
 
 We built the script specific to our deployment / test process. So you might want to tweak it - look at the `get_deploying_state` method - you can determine what steps have passed / failed / are running in there.
 
